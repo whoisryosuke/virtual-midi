@@ -52,14 +52,19 @@ fn run() -> Result<(), Box<dyn Error>> {
     println!("Connection open. Listen!");
     {
         // Define a new scope in which the closure `play_note` borrows conn_out, so it can be called easily
-        let mut play_note = |note: u8, duration: u64| {
+        let mut play_notes = |notes: Vec<u8>, duration: u64| {
             const NOTE_ON_MSG: u8 = 0x90;
             const NOTE_OFF_MSG: u8 = 0x80;
             const VELOCITY: u8 = 0x64;
             // We're ignoring errors in here
-            let _ = conn_out.send(&[NOTE_ON_MSG, note, VELOCITY]);
+
+            for note in &notes {
+                let _ = conn_out.send(&[NOTE_ON_MSG, *note, VELOCITY]);
+            }
             sleep(Duration::from_millis(duration * 150));
-            let _ = conn_out.send(&[NOTE_OFF_MSG, note, VELOCITY]);
+            for note in &notes {
+                let _ = conn_out.send(&[NOTE_OFF_MSG, *note, VELOCITY]);
+            }
         };
 
         sleep(Duration::from_millis(4 * 150));
@@ -90,6 +95,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             let chord_notes = chord.notes();
 
             // Loop over notes and play them
+            let mut notes_to_play = Vec::new();
             for note in chord_notes {
                 // The MIDI library requires MIDI numbers 
                 // (0-127 with 0-11 being the first 12 keysoctave -2)
@@ -100,8 +106,10 @@ fn run() -> Result<(), Box<dyn Error>> {
                 let note_base = note.pitch_class.into_u8();
                 let midi_note = note_base + octave_base;
                 print!("playing note: {}", midi_note);
-                play_note(midi_note, 4);
+                notes_to_play.push(midi_note);
             }
+            
+            play_notes(notes_to_play, 4);
 
             sleep(Duration::from_millis(4 * 150));
         }
