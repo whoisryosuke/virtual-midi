@@ -1,3 +1,5 @@
+![Screenshot of code in action with Ableton Live](./docs/screenshot.png)
+
 # Virtual MIDI Playground
 
 Control MIDI devices with code.
