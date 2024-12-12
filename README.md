@@ -1,6 +1,6 @@
 # Virtual MIDI Playground
 
-Control MIDI instruments with code.
+Control MIDI devices with code.
 
 ## Features
 
