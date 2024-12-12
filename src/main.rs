@@ -5,6 +5,12 @@ use std::time::Duration;
 
 use midir::{MidiOutput, MidiOutputPort};
 
+extern crate rust_music_theory as rustmt;
+use rustmt::note::{Note, Notes, PitchClass};
+use rustmt::scale::{Scale, ScaleType, Mode, Direction};
+use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
+
+
 fn main() {
     match run() {
         Ok(_) => (),
@@ -58,14 +64,43 @@ fn run() -> Result<(), Box<dyn Error>> {
 
         sleep(Duration::from_millis(4 * 150));
 
-        play_note(66, 4);
-        play_note(65, 3);
-        play_note(63, 1);
-        play_note(61, 6);
-        play_note(59, 2);
-        play_note(58, 4);
-        play_note(56, 4);
-        play_note(54, 4);
+        
+
+        // Chord Example;
+        let chord = Chord::new(PitchClass::C, ChordQuality::Major, ChordNumber::Triad);
+
+        // returns a Vector of the Notes of the chord
+        let chord_notes = chord.notes();
+
+
+        for note in chord_notes {
+            let octave_base = note.octave * 12;
+            let note_base = note.pitch_class.into_u8();
+            let midi_note = note_base + octave_base;
+            print!("playing note: {}", midi_note);
+            play_note(midi_note, 4);
+        }
+
+        sleep(Duration::from_millis(4 * 150));
+
+        
+
+        // Chord Example;
+        let chord = Chord::new(PitchClass::D, ChordQuality::Major, ChordNumber::Triad);
+
+        // returns a Vector of the Notes of the chord
+        let chord_notes = chord.notes();
+
+
+        for note in chord_notes {
+            let octave_base = note.octave * 12;
+            let note_base = note.pitch_class.into_u8();
+            let midi_note = note_base + octave_base;
+            print!("playing note: {}", midi_note);
+            play_note(midi_note, 4);
+        }
+
+
     }
     sleep(Duration::from_millis(150));
     println!("\nClosing connection");
