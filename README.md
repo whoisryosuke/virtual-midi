@@ -13,6 +13,8 @@ Control MIDI instruments with code.
 1. `cargo run` for main app
 1. `cargo run --example chord-eleventh` to run specific examples
 
+You should see a command line window pop up that asks you to pick a port. Once you do, music should play on the MIDI device.
+
 ### Requirements
 
 - [Rust](https://www.rust-lang.org/)
